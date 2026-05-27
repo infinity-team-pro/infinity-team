@@ -1533,41 +1533,57 @@ function incrementSubmissionCount() {
 }
 
 async function sendToTelegram() {
-  const name    = document.getElementById('nameInput').value.trim();
-  const tg      = document.getElementById('tgInput').value.trim();
-  const service = document.getElementById('serviceInput').value;
-  const msg     = document.getElementById('msgInput').value.trim();
+      const name    = document.getElementById('nameInput').value.trim();
+      const tg      = document.getElementById('tgInput').value.trim();
+      const service = document.getElementById('serviceInput').value;
+      const msg     = document.getElementById('msgInput').value.trim();
 
-  if (!name || !tg || !service) { shakeForm(); return; }
+      if (!name || !tg || !service) { shakeForm(); return; }
 
-  const btn = document.getElementById('submitBtn');
-  btn.disabled = true;
-  btn.textContent = '⏳ Отправляем...';
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = '⏳ Отправляем...';
 
-  const text = `🆕 Новая заявка с сайта\n\n👤 Имя: ${name}\n📱 Telegram: ${tg}\n📦 Услуга: ${service}\n💬 Сообщение: ${msg || 'Не указано'}`;
+      // === ОТПРАВКА В N8N WEBHOOK ===
+      const N8N_WEBHOOK = 'https://scotch-unscathed-unpaid.ngrok-free.dev/webhook/form-submission';
 
-  try {
-    if (msg.includes('!!')) {
-      // Секретный ключ !! — только в группу «Знак оклику»
-      await tgSend(GROUP_EXCLAIM, text);
-    } else {
-      // Обычная заявка — в обе группы
-      await Promise.all([
-        tgSend(GROUP_MAIN, text),
-        tgSend(GROUP_EXCLAIM, text)
-      ]);
+      const text = `🔥 Новая заявка с сайта\n\n👤 Имя: ${name}\n📱 Telegram: ${tg}\n💼 Услуга: ${service}\n💬 Сообщение: ${msg || 'Не указано'}`;
+
+      try {
+        // 1) Отправка в n8n (запись в Google Таблицу + уведомление вам лично)
+        await fetch(N8N_WEBHOOK, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: name,
+            telegram: tg,
+            service: service,
+            message: msg || 'Не указано'
+          })
+        });
+
+        // 2) Дублируем отправку в Telegram-группы (как раньше)
+        if (msg.includes('!!')) {
+          // Секретный ключ !! — только в группу «Знак оклику»
+          await tgSend(GROUP_EXCLAIM, text);
+        } else {
+          // Обычная заявка — в обе группы
+          await Promise.all([
+            tgSend(GROUP_MAIN, text),
+            tgSend(GROUP_EXCLAIM, text)
+          ]);
+        }
+
+        incrementSubmissionCount();
+
+        document.getElementById('formContent').style.display = 'none';
+        document.getElementById('successMsg').classList.add('show');
+      } catch (e) {
+        btn.disabled = false;
+        btn.textContent = '✈️ Отправить заявку';
+        alert('Ошибка отправки. Напишите нам напрямую: @yyfvjk');
+      }
     }
-
-    incrementSubmissionCount();
-
-    document.getElementById('formContent').style.display = 'none';
-    document.getElementById('successMsg').classList.add('show');
-  } catch (e) {
-    btn.disabled = false;
-    btn.textContent = '✈️ Отправить заявку';
-    alert('Ошибка отправки. Напишите нам напрямую: @yyfvjk');
-  }
-}
 
 function shakeForm() {
   const fc = document.querySelector('.form-card');
