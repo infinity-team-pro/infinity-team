@@ -1421,10 +1421,7 @@ body::after {
 <a href="https://t.me/yyfvjk" class="tg-float" target="_blank" title="Написать в Telegram">✈️</a>
 
 <script>
-// === TELEGRAM BOT CONFIG ===
-const BOT_TOKEN     = '8719255444:AAECtSG1wnn6C0dMfyuWo7XxZEW986ibiW8'; // токен бота
-const GROUP_MAIN    = '-1003693632563';  // Основная группа (все заявки)
-const GROUP_EXCLAIM = '-1003767089442';  // Группа «Знак оклику» (все заявки + дубль если есть !!)
+
 
 // === CUSTOM CURSOR (RAF-based, no lag) ===
 const cursor = document.getElementById('cursor');
@@ -1510,17 +1507,6 @@ document.querySelectorAll('.portfolio-card').forEach((el, i) => {
   observer.observe(el);
 });
 
-// === TELEGRAM SEND ===
-async function tgSend(chatId, text) {
-  const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML' })
-  });
-  const data = await res.json();
-  if (!data.ok) throw new Error(data.description);
-  return data;
-}
 
 // === SUBMISSION COUNTER (persisted via localStorage) ===
 function getSubmissionCount() {
@@ -1547,11 +1533,8 @@ async function sendToTelegram() {
       // === ОТПРАВКА В N8N WEBHOOK ===
       const N8N_WEBHOOK = 'https://scotch-unscathed-unpaid.ngrok-free.dev/webhook/form-submission';
 
-      const text = `🔥 Новая заявка с сайта\n\n👤 Имя: ${name}\n📱 Telegram: ${tg}\n💼 Услуга: ${service}\n💬 Сообщение: ${msg || 'Не указано'}`;
-
       try {
-        // 1) Отправка в n8n (запись в Google Таблицу + уведомление вам лично)
-        await fetch(N8N_WEBHOOK, {
+        const response = await fetch(N8N_WEBHOOK, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -1562,17 +1545,7 @@ async function sendToTelegram() {
           })
         });
 
-        // 2) Дублируем отправку в Telegram-группы (как раньше)
-        if (msg.includes('!!')) {
-          // Секретный ключ !! — только в группу «Знак оклику»
-          await tgSend(GROUP_EXCLAIM, text);
-        } else {
-          // Обычная заявка — в обе группы
-          await Promise.all([
-            tgSend(GROUP_MAIN, text),
-            tgSend(GROUP_EXCLAIM, text)
-          ]);
-        }
+        if (!response.ok) throw new Error('Network error');
 
         incrementSubmissionCount();
 
