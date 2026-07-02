@@ -6,7 +6,7 @@
 <title>Infinity"Team" — Production Studio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #0a0a0f;
@@ -22,6 +22,27 @@
   --glow: rgba(139,92,246,0.4);
 }
 
+/* PREMIUM GLOBAL POLISH */
+::selection { background: rgba(139,92,246,0.4); color: #fff; }
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--purple3), var(--purple));
+  border-radius: 100px;
+  border: 2px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--purple2); }
+
+/* FILM GRAIN — cinematic texture */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 html { scroll-behavior: smooth; }
@@ -29,7 +50,7 @@ html { scroll-behavior: smooth; }
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   overflow-x: hidden;
   cursor: none;
   -webkit-font-smoothing: antialiased;
@@ -118,6 +139,10 @@ body {
   background-size: 60px 60px;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
 /* PARTICLES */
 .particles {
   position: fixed;
@@ -160,9 +185,9 @@ nav.scrolled {
   background: rgba(10,10,15,0.95);
 }
 .nav-logo {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  font-size: 1.4rem;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: 1.15rem;
   background: linear-gradient(135deg, var(--purple2), var(--pink));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -233,6 +258,26 @@ main { position: relative; z-index: 1; }
   position: relative;
   overflow: hidden;
 }
+/* AURORA BEAM behind hero */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -30%; left: 50%;
+  width: 900px; height: 900px;
+  transform: translateX(-50%);
+  background: conic-gradient(from 0deg,
+    transparent 0deg,
+    rgba(139,92,246,0.14) 60deg,
+    rgba(236,72,153,0.08) 120deg,
+    transparent 180deg,
+    rgba(109,40,217,0.12) 260deg,
+    transparent 360deg);
+  filter: blur(60px);
+  animation: auroraSpin 24s linear infinite;
+  pointer-events: none;
+}
+@keyframes auroraSpin { to { transform: translateX(-50%) rotate(360deg); } }
+.hero > div { position: relative; z-index: 1; }
 .hero-badge {
   display: inline-flex;
   align-items: center;
@@ -258,13 +303,15 @@ main { position: relative; z-index: 1; }
   50% { transform: scale(1.4); opacity: 0.7; }
 }
 .hero h1 {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  font-size: clamp(2.8rem, 7vw, 5.5rem);
-  line-height: 1.1;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: clamp(2.2rem, 5.5vw, 4.4rem);
+  line-height: 1.14;
+  letter-spacing: -0.02em;
   margin-bottom: 28px;
   animation: fadeInUp 0.8s ease 0.2s forwards;
   opacity: 0;
+  text-shadow: 0 0 80px rgba(139,92,246,0.35);
 }
 .hero h1 .grad {
   background: linear-gradient(135deg, var(--purple2) 0%, var(--pink) 50%, var(--purple2) 100%);
@@ -322,8 +369,9 @@ main { position: relative; z-index: 1; }
 .btn-primary:hover::before { left: 100%; }
 .btn-primary:hover {
   transform: translateY(-3px);
-  box-shadow: 0 0 50px rgba(139,92,246,0.6);
+  box-shadow: 0 0 50px rgba(139,92,246,0.6), inset 0 1px 0 rgba(255,255,255,0.25);
 }
+.btn-primary { box-shadow: 0 0 30px rgba(109,40,217,0.4), inset 0 1px 0 rgba(255,255,255,0.15); }
 .btn-secondary {
   display: inline-flex;
   align-items: center;
@@ -366,9 +414,10 @@ main { position: relative; z-index: 1; }
 }
 .stat-item:last-child::after { display: none; }
 .stat-num {
-  font-family: 'Syne', sans-serif;
-  font-size: 2.4rem;
-  font-weight: 800;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  filter: drop-shadow(0 0 20px rgba(139,92,246,0.4));
   background: linear-gradient(135deg, var(--purple2), var(--pink));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -428,11 +477,16 @@ section { padding: 100px 40px; }
   background: var(--purple2);
 }
 .section-title {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  font-size: clamp(2rem, 4vw, 3rem);
-  line-height: 1.2;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.7rem, 3.4vw, 2.6rem);
+  line-height: 1.22;
+  letter-spacing: -0.01em;
   margin-bottom: 16px;
+  background: linear-gradient(135deg, #fff 30%, var(--purple2) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 .section-sub {
   color: var(--muted);
@@ -461,6 +515,19 @@ section { padding: 100px 40px; }
   opacity: 0;
   transform: translateY(30px);
 }
+/* SPOTLIGHT following cursor */
+.service-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(400px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(139,92,246,0.12), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+.service-card:hover::after { opacity: 1; }
+.service-card > * { position: relative; z-index: 1; }
 .service-card::before {
   content: '';
   position: absolute;
@@ -493,18 +560,20 @@ section { padding: 100px 40px; }
   border: 1px solid rgba(139,92,246,0.2);
 }
 .service-card h3 {
-  font-family: 'Syne', sans-serif;
-  font-weight: 700;
-  font-size: 1.2rem;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 600;
+  font-size: 1.02rem;
+  letter-spacing: 0.01em;
   margin-bottom: 12px;
 }
 .service-card p { color: var(--muted); line-height: 1.7; font-size: 0.95rem; margin-bottom: 20px; }
 .service-price {
-  font-family: 'Syne', sans-serif;
-  font-weight: 700;
-  font-size: 1.1rem;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
   color: var(--purple2);
   margin-bottom: 16px;
+  text-shadow: 0 0 24px rgba(167,139,250,0.5);
 }
 .service-tags { display: flex; flex-wrap: wrap; gap: 8px; }
 .tag {
@@ -515,6 +584,73 @@ section { padding: 100px 40px; }
   border-radius: 100px;
   font-size: 0.78rem;
   font-weight: 500;
+}
+
+/* SERVICE ACCORDION */
+.service-toggle {
+  margin-top: 20px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(139,92,246,0.08);
+  border: 1px solid rgba(139,92,246,0.25);
+  color: var(--purple2);
+  padding: 10px 16px;
+  border-radius: 14px;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.service-toggle:hover {
+  background: rgba(139,92,246,0.18);
+  border-color: rgba(139,92,246,0.5);
+  box-shadow: 0 0 20px rgba(139,92,246,0.2);
+}
+.toggle-arrow {
+  display: inline-block;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 1rem;
+}
+.service-card.open .toggle-arrow { transform: rotate(180deg); }
+.service-details {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s, margin-top 0.4s;
+  margin-top: 0;
+}
+.service-card.open .service-details {
+  max-height: 400px;
+  opacity: 1;
+  margin-top: 18px;
+}
+.service-details ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  background: rgba(0,0,0,0.25);
+  border: 1px solid rgba(139,92,246,0.15);
+  border-radius: 16px;
+}
+.service-details li {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  padding-left: 22px;
+  position: relative;
+}
+.service-details li::before {
+  content: '✦';
+  position: absolute;
+  left: 0;
+  color: var(--purple2);
+  font-size: 0.8rem;
 }
 
 /* WHY */
@@ -558,8 +694,9 @@ section { padding: 100px 40px; }
   justify-content: center;
 }
 .why-card h3 {
-  font-family: 'Syne', sans-serif;
-  font-weight: 700;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 600;
+  font-size: 0.98rem;
   margin-bottom: 8px;
 }
 .why-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
@@ -598,7 +735,9 @@ section { padding: 100px 40px; }
   font-size: 3.5rem;
   position: relative;
   overflow: hidden;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
+.portfolio-card:hover .portfolio-thumb { transform: scale(1.06); }
 .portfolio-thumb::after {
   content: '';
   position: absolute;
@@ -615,8 +754,9 @@ section { padding: 100px 40px; }
   margin-bottom: 8px;
 }
 .portfolio-info h3 {
-  font-family: 'Syne', sans-serif;
-  font-weight: 700;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
   margin-bottom: 8px;
 }
 .portfolio-info p { color: var(--muted); font-size: 0.9rem; }
@@ -636,9 +776,10 @@ section { padding: 100px 40px; }
   align-items: start;
 }
 .contact-info h2 {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
-  font-weight: 800;
+  font-family: 'Unbounded', sans-serif;
+  font-size: clamp(1.5rem, 3vw, 2.3rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
   margin-bottom: 20px;
 }
 .contact-info p { color: var(--muted); line-height: 1.7; margin-bottom: 36px; }
@@ -669,7 +810,7 @@ section { padding: 100px 40px; }
   padding: 40px;
 }
 .form-title {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Unbounded', sans-serif;
   font-weight: 700;
   font-size: 1.3rem;
   margin-bottom: 28px;
@@ -692,7 +833,7 @@ section { padding: 100px 40px; }
   padding: 14px 18px;
   color: var(--text);
   font-size: 0.95rem;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   transition: all 0.3s;
   outline: none;
 }
@@ -714,7 +855,7 @@ section { padding: 100px 40px; }
   border-radius: 14px;
   font-size: 1rem;
   font-weight: 600;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   cursor: none;
   transition: all 0.3s;
   box-shadow: 0 0 30px rgba(109,40,217,0.3);
@@ -749,7 +890,7 @@ section { padding: 100px 40px; }
   animation: bounceIn 0.6s ease;
 }
 .success-msg h3 {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Unbounded', sans-serif;
   font-weight: 700;
   font-size: 1.3rem;
   margin-bottom: 8px;
@@ -796,7 +937,7 @@ footer {
   transform: translateY(-2px);
 }
 .footer-col h4 {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Unbounded', sans-serif;
   font-weight: 700;
   font-size: 0.9rem;
   margin-bottom: 20px;
@@ -901,7 +1042,7 @@ footer {
 }
 .mobile-menu.open { opacity: 1; pointer-events: all; }
 .mobile-menu a {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Unbounded', sans-serif;
   font-size: 1.8rem;
   font-weight: 800;
   color: var(--text);
@@ -993,6 +1134,8 @@ body::after {
 </style>
 </head>
 <body>
+
+<div class="grain"></div>
 
 <!-- CURSOR -->
 <div class="cursor" id="cursor"></div>
@@ -1089,6 +1232,7 @@ body::after {
       <h2 class="section-title">Что мы делаем</h2>
       <p class="section-sub">Полный спектр digital-услуг для вашего бизнеса по доступным ценам</p>
       <div class="services-grid">
+
         <div class="service-card transition-el">
           <div class="service-icon">🎬</div>
           <h3>Видеомонтаж</h3>
@@ -1100,7 +1244,19 @@ body::after {
             <span class="tag">YouTube</span>
             <span class="tag">Shorts</span>
           </div>
+          <button class="service-toggle" onclick="toggleService(this)">Что входит <span class="toggle-arrow">▾</span></button>
+          <div class="service-details">
+            <ul>
+              <li>Reels, TikTok, YouTube Shorts</li>
+              <li>Длинные YouTube-видео</li>
+              <li>Рекламные и промо-ролики</li>
+              <li>Цветокоррекция и саунд-дизайн</li>
+              <li>Субтитры и моушн-графика</li>
+              <li>Интро, аутро и переходы</li>
+            </ul>
+          </div>
         </div>
+
         <div class="service-card transition-el">
           <div class="service-icon">🎨</div>
           <h3>Графический дизайн</h3>
@@ -1111,107 +1267,111 @@ body::after {
             <span class="tag">Баннеры</span>
             <span class="tag">Превью</span>
           </div>
+          <button class="service-toggle" onclick="toggleService(this)">Что входит <span class="toggle-arrow">▾</span></button>
+          <div class="service-details">
+            <ul>
+              <li>Карточки товаров для маркетплейсов</li>
+              <li>Баннеры и рекламные креативы</li>
+              <li>Превью для YouTube</li>
+              <li>Логотипы и фирменный стиль</li>
+              <li>Оформление соцсетей</li>
+              <li>Презентации и постеры</li>
+            </ul>
+          </div>
         </div>
+
         <div class="service-card transition-el">
           <div class="service-icon">💻</div>
           <h3>Сайты и Telegram-боты</h3>
           <p>Лендинги под ключ и Telegram-боты для автоматизации вашего бизнеса без лишних затрат.</p>
-          <div class="service-price">от $50 до $100</div>
+          <div class="service-price">от $50</div>
           <div class="service-tags">
             <span class="tag">Лендинги</span>
             <span class="tag">TG боты</span>
             <span class="tag">Под ключ</span>
           </div>
+          <button class="service-toggle" onclick="toggleService(this)">Что входит <span class="toggle-arrow">▾</span></button>
+          <div class="service-details">
+            <ul>
+              <li>Лендинги и многостраничные сайты</li>
+              <li>Telegram-боты любой сложности</li>
+              <li>Telegram Mini Apps</li>
+              <li>Интернет-магазины и каталоги</li>
+              <li>Приём платежей и интеграции</li>
+              <li>Админ-панели и CRM для ботов</li>
+            </ul>
+          </div>
         </div>
+
+        <div class="service-card transition-el">
+          <div class="service-icon">🎮</div>
+          <h3>Игры и приложения</h3>
+          <p>Разработка игр и приложений: от веб-игр и Telegram Mini Apps до полноценных игровых проектов.</p>
+          <div class="service-price">от $60</div>
+          <div class="service-tags">
+            <span class="tag">Web-игры</span>
+            <span class="tag">Mini Apps</span>
+            <span class="tag">Roblox</span>
+          </div>
+          <button class="service-toggle" onclick="toggleService(this)">Что входит <span class="toggle-arrow">▾</span></button>
+          <div class="service-details">
+            <ul>
+              <li>Браузерные и веб-игры</li>
+              <li>Игры внутри Telegram (Mini Apps)</li>
+              <li>Roblox: UI, меню, механики</li>
+              <li>Игровые интерфейсы и HUD</li>
+              <li>Прототипы и MVP приложений</li>
+              <li>Геймификация для бизнеса</li>
+            </ul>
+          </div>
+        </div>
+
         <div class="service-card transition-el">
           <div class="service-icon">🤖</div>
           <h3>ИИ Автоматизация</h3>
-          <p>Внедрение искусственного интеллекта в бизнес-процессы. Чат-боты, генерация контента и автоматизация.</p>
+          <p>Внедрение искусственного интеллекта в бизнес-процессы. Чат-боты, автоматизация рутины и AI-контент.</p>
           <div class="service-price">от $80</div>
           <div class="service-tags">
-            <span class="tag">Чат-боты</span>
-            <span class="tag">AI-контент</span>
+            <span class="tag">n8n</span>
+            <span class="tag">GPT</span>
             <span class="tag">Нейросети</span>
           </div>
-        </div>
-
-        <div class="service-card transition-el">
-          <div class="service-icon">💬</div>
-          <h3>AI Чат-боты</h3>
-          <p>Умные чат-боты на базе GPT для вашего бизнеса. Отвечают на вопросы, квалифицируют лидов и работают 24/7 без выходных.</p>
-          <div class="service-price">от $120</div>
-          <div class="service-tags">
-            <span class="tag">GPT-4</span>
-            <span class="tag">Telegram</span>
-            <span class="tag">WhatsApp</span>
-            <span class="tag">24/7</span>
+          <button class="service-toggle" onclick="toggleService(this)">Что входит <span class="toggle-arrow">▾</span></button>
+          <div class="service-details">
+            <ul>
+              <li>AI чат-боты (GPT) для Telegram и сайтов</li>
+              <li>Автоматизация заявок и уведомлений</li>
+              <li>Связки n8n / Make / Zapier</li>
+              <li>CRM и автоматизация продаж</li>
+              <li>Автогенерация контента и постинг</li>
+              <li>Email и мессенджер-воронки</li>
+            </ul>
           </div>
         </div>
 
         <div class="service-card transition-el">
-          <div class="service-icon">⚙️</div>
-          <h3>AI-автоматизация бизнеса</h3>
-          <p>Автоматизируем рутину: обработку заявок, уведомления, отчёты и внутренние процессы с помощью ИИ и no-code инструментов.</p>
-          <div class="service-price">от $150</div>
+          <div class="service-icon">🧊</div>
+          <h3>Blender / 3D</h3>
+          <p>3D-графика, которая выделяет бренд: моделирование, анимация и фотореалистичные рендеры.</p>
+          <div class="service-price">от $30</div>
           <div class="service-tags">
-            <span class="tag">Make</span>
-            <span class="tag">Zapier</span>
-            <span class="tag">n8n</span>
-            <span class="tag">No-code</span>
+            <span class="tag">3D-модели</span>
+            <span class="tag">Анимация</span>
+            <span class="tag">Рендер</span>
+          </div>
+          <button class="service-toggle" onclick="toggleService(this)">Что входит <span class="toggle-arrow">▾</span></button>
+          <div class="service-details">
+            <ul>
+              <li>3D-моделирование объектов и персонажей</li>
+              <li>3D-визуализация товаров</li>
+              <li>3D-анимация и интро для видео</li>
+              <li>3D-логотипы и брендинг</li>
+              <li>Ассеты для игр</li>
+              <li>Фотореалистичные рендеры</li>
+            </ul>
           </div>
         </div>
 
-        <div class="service-card transition-el">
-          <div class="service-icon">📊</div>
-          <h3>CRM / Sales Automation</h3>
-          <p>Настройка CRM-систем и автоматизация продаж. Воронки, авто-задачи, интеграции — больше сделок при меньших усилиях.</p>
-          <div class="service-price">от $200</div>
-          <div class="service-tags">
-            <span class="tag">CRM</span>
-            <span class="tag">Воронки</span>
-            <span class="tag">Интеграции</span>
-            <span class="tag">Продажи</span>
-          </div>
-        </div>
-
-        <div class="service-card transition-el">
-          <div class="service-icon">✍️</div>
-          <h3>AI Content Systems</h3>
-          <p>Системы автоматической генерации контента. Посты, статьи, описания товаров — в нужном стиле и в нужное время.</p>
-          <div class="service-price">от $100</div>
-          <div class="service-tags">
-            <span class="tag">Авто-постинг</span>
-            <span class="tag">SMM</span>
-            <span class="tag">Копирайтинг</span>
-            <span class="tag">AI</span>
-          </div>
-        </div>
-
-        <div class="service-card transition-el">
-          <div class="service-icon">🔍</div>
-          <h3>AI SEO / GEO / AIO</h3>
-          <p>Продвижение сайтов с помощью ИИ. Семантика, кластеризация, оптимизация под AI-поисковики и геолокационное SEO.</p>
-          <div class="service-price">от $180</div>
-          <div class="service-tags">
-            <span class="tag">SEO</span>
-            <span class="tag">GEO</span>
-            <span class="tag">AI-поиск</span>
-            <span class="tag">Трафик</span>
-          </div>
-        </div>
-
-        <div class="service-card transition-el">
-          <div class="service-icon">📧</div>
-          <h3>Email & Messenger Funnels</h3>
-          <p>Автоматические воронки в email и мессенджерах. Прогрев, продажи и удержание клиентов на полном автопилоте.</p>
-          <div class="service-price">от $130</div>
-          <div class="service-tags">
-            <span class="tag">Email</span>
-            <span class="tag">Telegram</span>
-            <span class="tag">Воронки</span>
-            <span class="tag">Автопилот</span>
-          </div>
-        </div>
       </div>
     </div>
   </section>
@@ -1332,15 +1492,10 @@ body::after {
                 <option value="">Выберите услугу</option>
                 <option>🎬 Видеомонтаж</option>
                 <option>🎨 Графический дизайн</option>
-                <option>💻 Сайт (лендинг)</option>
-                <option>🤖 Telegram-бот</option>
+                <option>💻 Сайты и Telegram-боты</option>
+                <option>🎮 Игры и приложения</option>
                 <option>🤖 ИИ Автоматизация</option>
-                <option>💬 AI Чат-боты</option>
-                <option>⚙️ AI-автоматизация бизнеса</option>
-                <option>📊 CRM / Sales Automation</option>
-                <option>✍️ AI Content Systems</option>
-                <option>🔍 AI SEO / GEO / AIO</option>
-                <option>📧 Email & Messenger Funnels</option>
+                <option>🧊 Blender / 3D</option>
                 <option>📋 Другое</option>
               </select>
             </div>
@@ -1398,8 +1553,10 @@ body::after {
       <ul>
         <li><a href="#services">Видеомонтаж</a></li>
         <li><a href="#services">Графический дизайн</a></li>
-        <li><a href="#services">Лендинги</a></li>
-        <li><a href="#services">Telegram-боты</a></li>
+        <li><a href="#services">Сайты и TG-боты</a></li>
+        <li><a href="#services">Игры и приложения</a></li>
+        <li><a href="#services">ИИ Автоматизация</a></li>
+        <li><a href="#services">Blender / 3D</a></li>
       </ul>
     </div>
     <div class="footer-col">
@@ -1498,6 +1655,24 @@ document.querySelectorAll('.service-card').forEach((el, i) => {
   el.dataset.delay = i * 120;
   observer.observe(el);
 });
+
+// === CARD SPOTLIGHT ===
+document.querySelectorAll('.service-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+    card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+  });
+});
+
+// === SERVICE ACCORDION ===
+function toggleService(btn) {
+  const card = btn.closest('.service-card');
+  const wasOpen = card.classList.contains('open');
+  // закрываем остальные карточки для аккуратности
+  document.querySelectorAll('.service-card.open').forEach(c => c.classList.remove('open'));
+  if (!wasOpen) card.classList.add('open');
+}
 document.querySelectorAll('.why-card').forEach((el, i) => {
   el.dataset.delay = i * 100;
   observer.observe(el);
